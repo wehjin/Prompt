@@ -5,5 +5,5 @@ package com.rubyhuntersky.promptdemo.prompt.basic;
  * @since 12/12/15.
  */
 
-public class BasicPrompts {
+public interface OnPresent {
 }

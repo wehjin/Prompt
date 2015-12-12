@@ -4,23 +4,26 @@ import android.os.Bundle;
 
 import com.rubyhuntersky.promptdemo.prompt.basic.ColorPrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Color;
+import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
+import com.rubyhuntersky.promptdemo.prompt.core.Prompt;
 
 public class MainActivity extends AudienceActivity {
 
-    private ColorPrompt colorPrompt;
+    private Prompt<?, ?> prompt;
     private Presentation presentation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        colorPrompt = new ColorPrompt(Color.BLUE);
+        final ColorPrompt colorPrompt = new ColorPrompt(Color.BLUE);
+        prompt = colorPrompt.inset(Dimension.TAPPABLE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presentation = colorPrompt.present(this, null);
+        presentation = prompt.present(this, null);
     }
 
     @Override
