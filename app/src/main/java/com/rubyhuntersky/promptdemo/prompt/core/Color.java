@@ -23,4 +23,16 @@ public class Color {
         this.green = green;
         this.blue = blue;
     }
+
+    public Color(float alpha, int rgb) {
+        this.alpha = alpha;
+        this.red = ((rgb >> 16) & 0xff) / 255f;
+        this.green = ((rgb >> 8) & 0xff) / 255f;
+        this.blue = (rgb & 0xff) / 255f;
+    }
+
+    public Color(float alpha, float bright) {
+        this.alpha = alpha;
+        this.red = this.blue = this.green = bright;
+    }
 }

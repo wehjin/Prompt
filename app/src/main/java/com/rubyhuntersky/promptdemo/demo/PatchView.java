@@ -9,7 +9,9 @@ import android.widget.FrameLayout;
 
 import com.rubyhuntersky.promptdemo.prompt.core.AndroidColor;
 import com.rubyhuntersky.promptdemo.prompt.core.Color;
+import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
+import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class PatchView extends FrameLayout {
     private float readingPixels;
     private float tappingPixels;
     private Map<SuperPatch, View> patchViews = new HashMap<>();
+    private Palette palette;
 
     public PatchView(Context context) {
         super(context);
@@ -41,17 +44,21 @@ public class PatchView extends FrameLayout {
         init();
     }
 
+    public void setPalette(Palette palette) {
+        this.palette = palette;
+    }
+
     private void init() {
         readingPixels = getPixelsFromDp(12);
         tappingPixels = getPixelsFromDp(48);
     }
 
-    public Patch addPatch(final Color color, final Region dimensions) {
+    public Patch addPatch(final ColorWell colorWell, final Region dimensions) {
         final View view = new View(getContext());
         final SuperPatch patch = new SuperPatch() {
             @Override
             public void updateView() {
-                view.setBackgroundColor(getAndroidColor(color));
+                view.setBackgroundColor(getAndroidColor(colorWell));
                 view.setLayoutParams(getPatchLayoutParams(dimensions));
             }
 
@@ -93,7 +100,8 @@ public class PatchView extends FrameLayout {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
-    private int getAndroidColor(Color color) {
+    private int getAndroidColor(ColorWell colorWell) {
+        final Color color = colorWell.getColor(palette);
         int red = (int) (255 * color.red);
         int green = (int) (255 * color.green);
         int blue = (int) (255 * color.blue);
