@@ -7,12 +7,20 @@ import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author wehjin
  * @since 12/12/15.
  */
 
-public class ColorPrompt extends BasePrompt<ColorWell, Void> {
+public class ColorPrompt extends BasePrompt<Void, Void> {
+    public static final ColorPrompt PRIMARY = new ColorPrompt(ColorWell.PRIMARY);
+
     private final ColorWell colorWell;
 
     public ColorPrompt(ColorWell color) {
@@ -20,26 +28,41 @@ public class ColorPrompt extends BasePrompt<ColorWell, Void> {
     }
 
     @Override
-    public Presentation<ColorWell> present(Audience audience, Observer<Void> observer) {
+    public Presentation<Void> present(Audience audience, Observer<Void> observer) {
+        final Presentation<Void> presentation = super.present(audience, observer);
         final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL);
-
-        final Presentation<ColorWell> superPresentation = super.present(audience, observer);
-        return new Presentation<ColorWell>() {
+        return new Presentation<Void>() {
             @Override
             public void end() {
                 patch.erase();
-                superPresentation.end();
+                presentation.end();
             }
 
             @Override
             public boolean isEnded() {
-                return superPresentation.isEnded();
+                return presentation.isEnded();
             }
 
             @Override
-            public ColorWell getProgress() {
-                return ColorPrompt.this.colorWell;
+            public Void getProgress() {
+                return presentation.getProgress();
             }
         };
+    }
+
+    @Override
+    public List<Element> toElements(Document document) {
+        final ArrayList<Element> elements = new ArrayList<>(super.toElements(document));
+        elements.add(getElement(document));
+        return elements;
+    }
+
+    private Element getElement(Document document) {
+        final Element element = document.createElement("ColorPrompt");
+        List<Element> colorElements = colorWell.toElements(document);
+        for (Element colorElement : colorElements) {
+            element.appendChild(colorElement);
+        }
+        return element;
     }
 }

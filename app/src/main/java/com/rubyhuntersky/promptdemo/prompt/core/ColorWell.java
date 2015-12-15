@@ -1,5 +1,13 @@
 package com.rubyhuntersky.promptdemo.prompt.core;
 
+import android.support.annotation.NonNull;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author wehjin
  * @since 12/14/15.
@@ -24,6 +32,18 @@ abstract public class ColorWell {
             public Color getColor(Palette palette) {
                 return palette.getColor(colorim);
             }
+
+            @Override
+            public List<Element> toElements(Document document) {
+                return Collections.singletonList(getElement(document));
+            }
+
+            @NonNull
+            private Element getElement(Document document) {
+                final Element element = document.createElement("ColorimWell");
+                element.setAttribute("colorim", colorim.name());
+                return element;
+            }
         });
     }
 
@@ -33,10 +53,18 @@ abstract public class ColorWell {
             public Color getColor(Palette palette) {
                 return onColor.getColor(palette);
             }
+
+            @Override
+            public List<Element> toElements(Document document) {
+                return onColor.toElements(document);
+            }
         };
     }
 
+    public abstract List<Element> toElements(Document document);
+
     public interface OnColor {
         Color getColor(Palette palette);
+        List<Element> toElements(Document document);
     }
 }
