@@ -1,12 +1,12 @@
 package com.rubyhuntersky.promptdemo.prompt.basic;
 
+import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.Audience;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Observer;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
-import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,19 +19,20 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class ColorPrompt extends BasePrompt<Void, Void> {
-    public static final ColorPrompt PRIMARY = new ColorPrompt(ColorWell.PRIMARY);
+public class TextLinePrompt extends BasePrompt<Void, Void> {
 
     private final ColorWell colorWell;
+    private final TextLineShape textLineShape;
 
-    public ColorPrompt(ColorWell color) {
+    public TextLinePrompt(ColorWell color, String text, Anchor anchor) {
         this.colorWell = color;
+        textLineShape = new TextLineShape(text, anchor);
     }
 
     @Override
     public Presentation<Void> present(Audience audience, Observer<Void> observer) {
         final Presentation<Void> presentation = super.present(audience, observer);
-        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, Shape.RECTANGLE);
+        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, textLineShape);
         return new Presentation<Void>() {
             @Override
             public void end() {

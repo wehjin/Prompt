@@ -9,6 +9,7 @@ import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
+import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 
 abstract public class AudienceActivity extends AppCompatActivity implements Audience {
 
@@ -26,7 +27,7 @@ abstract public class AudienceActivity extends AppCompatActivity implements Audi
     }
 
     @Override
-    public Patch getPatch(ColorWell color, Region dimensions) {
-        return patchView.addPatch(color, dimensions);
+    public Patch getPatch(ColorWell color, Region dimensions, Shape shape) {
+        return patchView.addPatch(color, dimensions, shape);
     }
 }

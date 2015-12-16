@@ -6,7 +6,7 @@ package com.rubyhuntersky.promptdemo.prompt.core;
  */
 
 public enum Unit {
-    READABLE,
+    READABLE_TEXT,
     TAPPABLE,
     SPACE,
     COMPOUND,

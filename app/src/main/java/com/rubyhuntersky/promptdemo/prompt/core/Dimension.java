@@ -18,7 +18,7 @@ abstract public class Dimension {
 
     public static final Dimension SPACE_START = create(Unit.SPACE, 0);
     public static final Dimension SPACE_END = create(Unit.SPACE, 1);
-    public static final Dimension READABLE = create(Unit.READABLE, 1);
+    public static final Dimension READABLE_TEXT = create(Unit.READABLE_TEXT, 1);
     public static final Dimension TAPPABLE = create(Unit.TAPPABLE, 1);
 
     abstract public List<Element> toElements(Document document);
@@ -94,7 +94,7 @@ abstract public class Dimension {
             @Override
             public float convert(float perReadable, float perTappable, float perSpace) {
                 switch (unit) {
-                    case READABLE:
+                    case READABLE_TEXT:
                         return perReadable * amount;
                     case TAPPABLE:
                         return perTappable * amount;

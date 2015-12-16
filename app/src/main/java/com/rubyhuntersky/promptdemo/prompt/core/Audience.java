@@ -6,5 +6,5 @@ package com.rubyhuntersky.promptdemo.prompt.core;
  */
 
 public interface Audience {
-    Patch getPatch(ColorWell colorWell, Region dimensions);
+    Patch getPatch(ColorWell colorWell, Region dimensions, Shape shape);
 }

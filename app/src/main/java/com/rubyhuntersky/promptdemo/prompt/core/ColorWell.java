@@ -23,6 +23,7 @@ abstract public class ColorWell {
     public static final ColorWell ACCENT = create(Colorim.ACCENT);
     public static final ColorWell ACCENT_FALLBACK = create(Colorim.ACCENT_FALLBACK);
     public static final ColorWell DIVIDER_DARK = create(Colorim.DIVIDER_DARK);
+    public static final ColorWell CONTENT_DARK = create(Colorim.CONTENT_DARK);
 
     abstract public Color getColor(Palette palette);
 

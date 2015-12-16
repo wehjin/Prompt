@@ -8,6 +8,7 @@ import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Prompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
+import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,8 +42,8 @@ public class BasePrompt<ProgressT, ResultT> implements Prompt<ProgressT, ResultT
             public void present(final Presenter<ProgressT, ResultT> presenter) {
                 previousPrompt.present(new Audience() {
                     @Override
-                    public Patch getPatch(ColorWell color, Region dimensions) {
-                        return presenter.getPatch(color, dimensions.inset(inset));
+                    public Patch getPatch(ColorWell color, Region dimensions, Shape shape) {
+                        return presenter.getPatch(color, dimensions.inset(inset), shape);
                     }
                 }, presenter);
             }
@@ -73,8 +74,8 @@ public class BasePrompt<ProgressT, ResultT> implements Prompt<ProgressT, ResultT
             boolean isEnded = false;
 
             @Override
-            public Patch getPatch(ColorWell color, Region dimensions) {
-                return audience.getPatch(color, dimensions);
+            public Patch getPatch(ColorWell color, Region dimensions, Shape shape) {
+                return audience.getPatch(color, dimensions, shape);
             }
 
             @Override

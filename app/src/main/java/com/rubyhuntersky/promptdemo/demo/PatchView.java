@@ -9,10 +9,11 @@ import android.widget.FrameLayout;
 
 import com.rubyhuntersky.promptdemo.prompt.core.AndroidColor;
 import com.rubyhuntersky.promptdemo.prompt.core.Color;
+import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
-import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
+import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,12 +54,13 @@ public class PatchView extends FrameLayout {
         tappingPixels = getPixelsFromDp(48);
     }
 
-    public Patch addPatch(final ColorWell colorWell, final Region dimensions) {
-        final View view = new View(getContext());
+    public Patch addPatch(final ColorWell colorWell, final Region dimensions, Shape shape) {
+        final ShapeView view = new ShapeView(getContext());
+        view.setShape(shape);
         final SuperPatch patch = new SuperPatch() {
             @Override
             public void updateView() {
-                view.setBackgroundColor(getAndroidColor(colorWell));
+                view.setColor(getAndroidColor(colorWell));
                 view.setLayoutParams(getPatchLayoutParams(dimensions));
             }
 
