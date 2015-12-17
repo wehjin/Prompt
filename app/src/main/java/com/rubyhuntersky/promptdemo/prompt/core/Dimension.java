@@ -20,6 +20,13 @@ abstract public class Dimension {
     public static final Dimension SPACE_END = create(Unit.SPACE, 1);
     public static final Dimension READABLE_TEXT = create(Unit.READABLE_TEXT, 1);
     public static final Dimension TAPPABLE = create(Unit.TAPPABLE, 1);
+    public static final Dimension HALF_SPACE = create(Unit.SPACE, .5f);
+    public static final Dimension HALF_READABLE_TEXT = create(Unit.READABLE_TEXT, .5f);
+    public static final Dimension HALF_TAPPABLE = create(Unit.TAPPABLE, .5f);
+    public static final Dimension QUARTER_TAPPABLE = create(Unit.TAPPABLE, .25f);
+    public static final Dimension CENTER_READABLE = Dimension.HALF_SPACE.offset(Dimension.HALF_READABLE_TEXT.negate());
+    public static final Dimension CENTER_LABEL = Dimension.HALF_SPACE.offset(
+          Dimension.TAPPABLE.multiply(1 / 5f).negate());
 
     abstract public List<Element> toElements(Document document);
 

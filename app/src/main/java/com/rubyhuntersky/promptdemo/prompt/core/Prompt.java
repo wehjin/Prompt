@@ -13,5 +13,5 @@ import java.util.List;
 public interface Prompt<ProgressT, ResultT> {
     List<Element> toElements(Document document);
     Presentation<ProgressT> present(Audience audience, Observer<ResultT> observer);
-    Prompt<ProgressT, ResultT> inset(Dimension inset);
+    Prompt<ProgressT, ResultT> inset(Dimension... insets);
 }

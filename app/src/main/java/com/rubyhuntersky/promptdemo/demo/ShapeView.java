@@ -48,7 +48,6 @@ public class ShapeView extends View {
         if (shape == Shape.RECTANGLE) {
             setBackgroundColor(color);
         } else {
-            setBackgroundColor(0x88ff0000);
             paint.setColor(color);
             invalidate();
         }

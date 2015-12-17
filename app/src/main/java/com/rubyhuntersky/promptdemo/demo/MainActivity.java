@@ -40,7 +40,10 @@ public class MainActivity extends AudienceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.prompt = new TextlinePrompt(ColorWell.CONTENT_DARK, "Hello", Anchor.CENTER).inset(Dimension.READABLE_TEXT);
+
+        final Dimension vInset = Dimension.CENTER_LABEL;
+        final Dimension hInset = Dimension.READABLE_TEXT;
+        this.prompt = new TextlinePrompt(ColorWell.CONTENT_DARK, "Hello", Anchor.CENTER).inset(vInset, hInset);
 
         try {
             final Document document = getDocument();

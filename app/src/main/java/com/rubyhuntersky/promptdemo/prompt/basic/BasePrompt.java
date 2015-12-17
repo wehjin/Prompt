@@ -34,36 +34,8 @@ public class BasePrompt<ProgressT, ResultT> implements Prompt<ProgressT, ResultT
     }
 
     @Override
-    public Prompt<ProgressT, ResultT> inset(final Dimension inset) {
-        final BasePrompt<ProgressT, ResultT> previousPrompt = this;
-
-        return new BasePrompt<>(new OnPresent<ProgressT, ResultT>() {
-            @Override
-            public void present(final Presenter<ProgressT, ResultT> presenter) {
-                previousPrompt.present(new Audience() {
-                    @Override
-                    public Patch getPatch(ColorWell color, Region dimensions, Shape shape) {
-                        return presenter.getPatch(color, dimensions.inset(inset), shape);
-                    }
-                }, presenter);
-            }
-
-            @Override
-            public List<Element> toElements(Document document) {
-                final List<Element> elements = previousPrompt.toElements(document);
-                final Element insetElement = getElement(document);
-                elements.add(insetElement);
-                return elements;
-            }
-
-            private Element getElement(Document document) {
-                final Element insetElement = document.createElement("Inset");
-                for (Element element : inset.toElements(document)) {
-                    insetElement.appendChild(element);
-                }
-                return insetElement;
-            }
-        });
+    public Prompt<ProgressT, ResultT> inset(final Dimension... insets) {
+        return new BasePrompt<>(new InsetOnPresent<>(this, insets));
     }
 
     @Override
@@ -110,5 +82,49 @@ public class BasePrompt<ProgressT, ResultT> implements Prompt<ProgressT, ResultT
     }
 
     public interface Presenter<ProgressT, ResultT> extends Audience, Observer<ResultT>, Presentation<ProgressT> {
+    }
+
+    private static class InsetOnPresent<ProgressT, ResultT> implements OnPresent<ProgressT, ResultT> {
+        private final BasePrompt<ProgressT, ResultT> previousPrompt;
+        private final Dimension[] insets;
+
+        public InsetOnPresent(BasePrompt<ProgressT, ResultT> previousPrompt, Dimension... insets) {
+            this.previousPrompt = previousPrompt;
+            this.insets = insets;
+        }
+
+        @Override
+        public void present(final Presenter<ProgressT, ResultT> presenter) {
+            previousPrompt.present(new Audience() {
+                @Override
+                public Patch getPatch(ColorWell color, Region dimensions, Shape shape) {
+                    return presenter.getPatch(color, dimensions.inset(insets), shape);
+                }
+            }, presenter);
+        }
+
+        @Override
+        public List<Element> toElements(Document document) {
+            final List<Element> elements = previousPrompt.toElements(document);
+            final Element insetElement = getElement(document);
+            elements.add(insetElement);
+            return elements;
+        }
+
+        private Element getElement(Document document) {
+            final Element insetsElement = document.createElement("Insets");
+            boolean first = true;
+            for (Dimension inset : insets) {
+                if (first) {
+                    first = false;
+                } else {
+                    insetsElement.appendChild(document.createElement("_."));
+                }
+                for (Element element : inset.toElements(document)) {
+                    insetsElement.appendChild(element);
+                }
+            }
+            return insetsElement;
+        }
     }
 }
