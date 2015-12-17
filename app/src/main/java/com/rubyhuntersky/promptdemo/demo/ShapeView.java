@@ -59,11 +59,14 @@ public class ShapeView extends View {
         if (shape instanceof TextlineShape) {
             TextlineShape textLine = (TextlineShape) shape;
             final String text = textLine.text;
-            paint.setTextSize(getHeight() * 1.41f);
+            final float textExtra = getHeight() / 3;
+            final float textHeight = 2 * textExtra;
+
+            paint.setTextSize(textHeight * 1.41f);
             final float textWidth = paint.measureText(text);
             final float extraWidth = getWidth() - textWidth;
             final float x = extraWidth * ((TextlineShape) shape).anchor.x;
-            final float y = getHeight();
+            final float y = textHeight;
             path.reset();
             paint.getTextPath(text, 0, text.length(), x, y, path);
             path.close();

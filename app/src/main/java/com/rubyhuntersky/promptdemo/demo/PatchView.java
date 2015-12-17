@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.rubyhuntersky.promptdemo.prompt.basic.TextlineShape;
 import com.rubyhuntersky.promptdemo.prompt.core.AndroidColor;
 import com.rubyhuntersky.promptdemo.prompt.core.Color;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
@@ -54,14 +55,14 @@ public class PatchView extends FrameLayout {
         tappingPixels = getPixelsFromDp(48);
     }
 
-    public Patch addPatch(final ColorWell colorWell, final Region dimensions, Shape shape) {
+    public Patch addPatch(final ColorWell colorWell, final Region dimensions, final Shape shape) {
         final ShapeView view = new ShapeView(getContext());
         view.setShape(shape);
         final SuperPatch patch = new SuperPatch() {
             @Override
             public void updateView() {
                 view.setColor(getAndroidColor(colorWell));
-                view.setLayoutParams(getPatchLayoutParams(dimensions));
+                view.setLayoutParams(getPatchLayoutParams(dimensions, shape));
             }
 
             @Override
@@ -85,13 +86,16 @@ public class PatchView extends FrameLayout {
     }
 
     @NonNull
-    private FrameLayout.LayoutParams getPatchLayoutParams(Region dimensions) {
+    private FrameLayout.LayoutParams getPatchLayoutParams(Region dimensions, Shape shape) {
         final int frameWidth = getWidth();
         final int frameHeight = getHeight();
         int left = (int) dimensions.getLeft().convert(readingPixels, tappingPixels, frameWidth);
         int top = (int) dimensions.getTop().convert(readingPixels, tappingPixels, frameHeight);
         int width = (int) dimensions.getWidth().convert(readingPixels, tappingPixels, frameWidth);
         int height = (int) dimensions.getHeight().convert(readingPixels, tappingPixels, frameHeight);
+        if (shape instanceof TextlineShape) {
+            height *= 1.5;
+        }
         final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
         params.leftMargin = left;
         params.topMargin = top;
