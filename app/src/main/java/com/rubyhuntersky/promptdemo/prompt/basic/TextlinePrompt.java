@@ -19,20 +19,20 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class TextLinePrompt extends BasePrompt<Void, Void> {
+public class TextlinePrompt extends BasePrompt<Void, Void> {
 
     private final ColorWell colorWell;
-    private final TextLineShape textLineShape;
+    private final TextlineShape textlineShape;
 
-    public TextLinePrompt(ColorWell color, String text, Anchor anchor) {
+    public TextlinePrompt(ColorWell color, String text, Anchor anchor) {
         this.colorWell = color;
-        textLineShape = new TextLineShape(text, anchor);
+        textlineShape = new TextlineShape(text, anchor);
     }
 
     @Override
     public Presentation<Void> present(Audience audience, Observer<Void> observer) {
         final Presentation<Void> presentation = super.present(audience, observer);
-        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, textLineShape);
+        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, textlineShape);
         return new Presentation<Void>() {
             @Override
             public void end() {
@@ -60,7 +60,9 @@ public class TextLinePrompt extends BasePrompt<Void, Void> {
     }
 
     private Element getElement(Document document) {
-        final Element element = document.createElement("ColorPrompt");
+        final Element element = document.createElement("TextlinePrompt");
+        element.setAttribute("text", textlineShape.text);
+        element.setAttribute("anchor", textlineShape.anchor.toAttribute());
         List<Element> colorElements = colorWell.toElements(document);
         for (Element colorElement : colorElements) {
             element.appendChild(colorElement);

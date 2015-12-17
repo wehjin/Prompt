@@ -7,7 +7,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.rubyhuntersky.promptdemo.prompt.basic.TextLineShape;
+import com.rubyhuntersky.promptdemo.prompt.basic.TextlineShape;
 import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 
 /**
@@ -57,13 +57,13 @@ public class ShapeView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (shape instanceof TextLineShape) {
-            TextLineShape textLine = (TextLineShape) shape;
+        if (shape instanceof TextlineShape) {
+            TextlineShape textLine = (TextlineShape) shape;
             final String text = textLine.text;
             paint.setTextSize(getHeight() * 1.41f);
             final float textWidth = paint.measureText(text);
             final float extraWidth = getWidth() - textWidth;
-            final float x = extraWidth * ((TextLineShape) shape).anchor.x;
+            final float x = extraWidth * ((TextlineShape) shape).anchor.x;
             final float y = getHeight();
             path.reset();
             paint.getTextPath(text, 0, text.length(), x, y, path);

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.rubyhuntersky.promptdemo.prompt.basic.TextLinePrompt;
+import com.rubyhuntersky.promptdemo.prompt.basic.TextlinePrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
@@ -40,7 +40,7 @@ public class MainActivity extends AudienceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.prompt = new TextLinePrompt(ColorWell.CONTENT_DARK, "Hello", Anchor.CENTER).inset(Dimension.READABLE_TEXT);
+        this.prompt = new TextlinePrompt(ColorWell.CONTENT_DARK, "Hello", Anchor.CENTER).inset(Dimension.READABLE_TEXT);
 
         try {
             final Document document = getDocument();
