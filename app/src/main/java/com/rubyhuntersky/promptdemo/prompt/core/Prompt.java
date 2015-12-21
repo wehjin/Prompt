@@ -10,8 +10,16 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public interface Prompt<ProgressT, ResultT> {
+public interface Prompt<ProgressT> extends Reducible {
+    Presentation<ProgressT> present(Audience audience, Observer<ProgressT> observer);
     List<Element> toElements(Document document);
-    Presentation<ProgressT> present(Audience audience, Observer<ResultT> observer);
-    Prompt<ProgressT, ResultT> inset(Dimension... insets);
+
+    Prompt<ProgressT> inset(Dimension... insets);
+    <ProgressT2, AdaptedT> Prompt<AdaptedT> carveBottom(Dimension size, Prompt<ProgressT2> prompt,
+          Adapter2<ProgressT, ProgressT2, AdaptedT> adapter);
+
+    interface Adapter2<InputT1, InputT2, OutputT> {
+        Adapter2<Void, Void, Void> VOID = new Adapter2<Void, Void, Void>() {
+        };
+    }
 }

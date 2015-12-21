@@ -19,8 +19,9 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class ColorPrompt extends BasePrompt<Void, Void> {
+public class ColorPrompt extends BasePrompt<Void> {
     public static final ColorPrompt PRIMARY = new ColorPrompt(ColorWell.PRIMARY);
+    public static final ColorPrompt ACCENT = new ColorPrompt(ColorWell.ACCENT);
 
     private final ColorWell colorWell;
 
@@ -31,7 +32,7 @@ public class ColorPrompt extends BasePrompt<Void, Void> {
     @Override
     public Presentation<Void> present(Audience audience, Observer<Void> observer) {
         final Presentation<Void> presentation = super.present(audience, observer);
-        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, Shape.RECTANGLE);
+        final Patch patch = audience.getPatch(this.colorWell, new Region(audience.getSpace()), Shape.RECTANGLE);
         return new Presentation<Void>() {
             @Override
             public void end() {

@@ -19,7 +19,7 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class TextlinePrompt extends BasePrompt<Void, Void> {
+public class TextlinePrompt extends BasePrompt<Void> {
 
     private final ColorWell colorWell;
     private final TextlineShape textlineShape;
@@ -32,7 +32,7 @@ public class TextlinePrompt extends BasePrompt<Void, Void> {
     @Override
     public Presentation<Void> present(Audience audience, Observer<Void> observer) {
         final Presentation<Void> presentation = super.present(audience, observer);
-        final Patch patch = audience.getPatch(this.colorWell, Region.SPACE_ALL, textlineShape);
+        final Patch patch = audience.getPatch(this.colorWell, new Region(audience.getSpace()), textlineShape);
         return new Presentation<Void>() {
             @Override
             public void end() {

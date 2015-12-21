@@ -3,6 +3,7 @@ package com.rubyhuntersky.promptdemo.demo;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,6 +16,7 @@ import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Region;
 import com.rubyhuntersky.promptdemo.prompt.core.Shape;
+import com.rubyhuntersky.promptdemo.prompt.core.Space;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,8 @@ public class PatchView extends FrameLayout {
     private float tappingPixels;
     private Map<SuperPatch, View> patchViews = new HashMap<>();
     private Palette palette;
+    private Space space;
+    private OnSpaceChanged onSpaceChanged;
 
     public PatchView(Context context) {
         super(context);
@@ -50,9 +54,18 @@ public class PatchView extends FrameLayout {
         this.palette = palette;
     }
 
+    public void setOnSpaceChanged(OnSpaceChanged onSpaceChanged) {
+        this.onSpaceChanged = onSpaceChanged;
+    }
+
     private void init() {
         readingPixels = getPixelsFromDp(12);
         tappingPixels = getPixelsFromDp(48);
+    }
+
+    public Space getSpace() {
+        Log.d(PatchView.class.getSimpleName(), "Width: " + getWidth());
+        return space == null ? new Space(320, 480, 16, 44) : space;
     }
 
     public Patch addPatch(final ColorWell colorWell, final Region dimensions, final Shape shape) {
@@ -80,19 +93,22 @@ public class PatchView extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldWidth, int oldHeight) {
         super.onSizeChanged(w, h, oldWidth, oldHeight);
+        Log.d(PatchView.class.getSimpleName(), "onSizeChanged Width: " + w);
+        space = new Space(getWidth(), getHeight(), readingPixels, tappingPixels);
         for (SuperPatch patch : patchViews.keySet()) {
             patch.updateView();
+        }
+        if (onSpaceChanged != null) {
+            onSpaceChanged.onSpaceChanged();
         }
     }
 
     @NonNull
-    private FrameLayout.LayoutParams getPatchLayoutParams(Region dimensions, Shape shape) {
-        final int frameWidth = getWidth();
-        final int frameHeight = getHeight();
-        int left = (int) dimensions.getLeft().convert(readingPixels, tappingPixels, frameWidth);
-        int top = (int) dimensions.getTop().convert(readingPixels, tappingPixels, frameHeight);
-        int width = (int) dimensions.getWidth().convert(readingPixels, tappingPixels, frameWidth);
-        int height = (int) dimensions.getHeight().convert(readingPixels, tappingPixels, frameHeight);
+    private FrameLayout.LayoutParams getPatchLayoutParams(Region region, Shape shape) {
+        int left = (int) region.left;
+        int top = (int) region.top;
+        int width = (int) region.width;
+        int height = (int) region.height;
         if (shape instanceof TextlineShape) {
             height *= 1.5;
         }
@@ -117,5 +133,9 @@ public class PatchView extends FrameLayout {
 
     interface SuperPatch extends Patch {
         void updateView();
+    }
+
+    interface OnSpaceChanged {
+        void onSpaceChanged();
     }
 }

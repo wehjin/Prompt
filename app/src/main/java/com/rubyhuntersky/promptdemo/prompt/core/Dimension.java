@@ -14,20 +14,22 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-abstract public class Dimension {
+abstract public class Dimension implements Reducible {
 
+    public static final Dimension ZERO = create(Unit.ZERO, 0);
     public static final Dimension SPACE_START = create(Unit.SPACE, 0);
     public static final Dimension SPACE_END = create(Unit.SPACE, 1);
-    public static final Dimension READABLE_TEXT = create(Unit.READABLE_TEXT, 1);
+    public static final Dimension READABLE = create(Unit.READABLE, 1);
     public static final Dimension TAPPABLE = create(Unit.TAPPABLE, 1);
     public static final Dimension HALF_SPACE = create(Unit.SPACE, .5f);
-    public static final Dimension HALF_READABLE_TEXT = create(Unit.READABLE_TEXT, .5f);
+    public static final Dimension HALF_READABLE_TEXT = create(Unit.READABLE, .5f);
     public static final Dimension HALF_TAPPABLE = create(Unit.TAPPABLE, .5f);
     public static final Dimension QUARTER_TAPPABLE = create(Unit.TAPPABLE, .25f);
     public static final Dimension CENTER_READABLE = Dimension.HALF_SPACE.offset(Dimension.HALF_READABLE_TEXT.negate());
     public static final Dimension CENTER_LABEL = Dimension.HALF_SPACE.offset(
           Dimension.TAPPABLE.multiply(1 / 5f).negate());
 
+    @Override
     abstract public List<Element> toElements(Document document);
 
     abstract public float convert(float perReadable, float perTappable, float perSpace);
@@ -57,6 +59,27 @@ abstract public class Dimension {
                 final Element element = document.createElement("Multiply");
                 element.setAttribute("factor", String.valueOf(factor));
                 return element;
+            }
+        });
+    }
+
+    public Dimension divide(final Dimension divisor) {
+        final Dimension leftDimension = Dimension.this;
+        return create(new Implementation() {
+            @Override
+            public float convert(float perReadable, float perTappable, float perSpace) {
+                final float divisorFloat = divisor.convert(perReadable, perTappable, perSpace);
+                return leftDimension.convert(perReadable, perTappable, perSpace) / divisorFloat;
+            }
+
+            @Override
+            public List<Element> toElements(Document document) {
+                final Element element = document.createElement("Divide");
+                final List<Element> childElements = divisor.toElements(document);
+                for (Element childElement : childElements) {
+                    element.appendChild(childElement);
+                }
+                return Collections.singletonList(element);
             }
         });
     }
@@ -101,7 +124,9 @@ abstract public class Dimension {
             @Override
             public float convert(float perReadable, float perTappable, float perSpace) {
                 switch (unit) {
-                    case READABLE_TEXT:
+                    case ZERO:
+                        return 0;
+                    case READABLE:
                         return perReadable * amount;
                     case TAPPABLE:
                         return perTappable * amount;

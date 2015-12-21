@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.rubyhuntersky.promptdemo.prompt.basic.ColorPrompt;
 import com.rubyhuntersky.promptdemo.prompt.basic.TextlinePrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
@@ -27,8 +28,8 @@ import javax.xml.transform.stream.StreamResult;
 
 public class MainActivity extends AudienceActivity {
 
-    private Prompt<?, ?> prompt;
-    private Presentation presentation;
+    private Prompt<?> prompt;
+    private Presentation<?> presentation;
     private final Palette palette = new MainPalette();
 
     @Override
@@ -42,8 +43,12 @@ public class MainActivity extends AudienceActivity {
 
 
         final Dimension vInset = Dimension.CENTER_LABEL;
-        final Dimension hInset = Dimension.READABLE_TEXT;
-        this.prompt = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER).inset(vInset, hInset);
+        final Dimension hInset = Dimension.READABLE;
+        final Prompt<Void> centeredReadable = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER)
+              .inset(vInset, hInset);
+        this.prompt = centeredReadable
+              .carveBottom(Dimension.READABLE, ColorPrompt.ACCENT, Prompt.Adapter2.VOID)
+              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, Prompt.Adapter2.VOID);
 
         try {
             final Document document = getDocument();
@@ -67,6 +72,18 @@ public class MainActivity extends AudienceActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        refreshPresentation();
+    }
+
+    @Override
+    protected void onSpaceChanged() {
+        refreshPresentation();
+    }
+
+    private void refreshPresentation() {
+        if (presentation != null) {
+            presentation.end();
+        }
         presentation = prompt.present(this, null);
     }
 

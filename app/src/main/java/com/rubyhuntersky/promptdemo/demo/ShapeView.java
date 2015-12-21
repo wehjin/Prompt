@@ -18,7 +18,6 @@ import com.rubyhuntersky.promptdemo.prompt.core.Shape;
 public class ShapeView extends View {
     public static final String TAG = ShapeView.class.getSimpleName();
     private Shape shape = Shape.RECTANGLE;
-    private int color;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
     private Path path = new Path();
 
@@ -44,7 +43,6 @@ public class ShapeView extends View {
     }
 
     public void setColor(int color) {
-        this.color = color;
         if (shape == Shape.RECTANGLE) {
             setBackgroundColor(color);
         } else {
