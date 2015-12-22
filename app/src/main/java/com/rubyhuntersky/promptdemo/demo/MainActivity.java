@@ -5,11 +5,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.rubyhuntersky.promptdemo.prompt.basic.ColorPrompt;
-import com.rubyhuntersky.promptdemo.prompt.basic.TextlinePrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
-import com.rubyhuntersky.promptdemo.prompt.core.OutcomeAdapter;
 import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Prompt;
@@ -42,15 +40,8 @@ public class MainActivity extends AudienceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        final Dimension vInset = Dimension.CENTER_LABEL;
-        final Dimension hInset = Dimension.READABLE;
-        final Prompt<Void, Void> centeredReadable = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER)
-              .inset(vInset, hInset);
-        this.prompt = centeredReadable
-              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, OutcomeAdapter.VOID)
-              .carveBottom(Dimension.READABLE, ColorPrompt.ACCENT, OutcomeAdapter.VOID)
-        ;
+        this.prompt = new ColorPrompt(ColorWell.PRIMARY_LIGHT).limitHeight(Dimension.ALTSPACE, Anchor.CENTER)
+                                                              .inset(Dimension.TAPPABLE);
 
         try {
             final Document document = getDocument();

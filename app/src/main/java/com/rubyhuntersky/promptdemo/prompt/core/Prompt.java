@@ -16,8 +16,8 @@ public interface Prompt<P, O> extends Reducible {
 
     Prompt<P, O> inset(Dimension... insets);
 
-    <P2, O2, P3, O3> Prompt<P3, O3> carveBottom(Dimension size,
-          Prompt<P2, O2> prompt,
+    <P2, O2, P3, O3> Prompt<P3, O3> carveBottom(Dimension size, Prompt<P2, O2> prompt,
           OutcomeAdapter<O, O2, O3> adapter);
 
+    Prompt<P, O> limitHeight(Dimension size, Anchor anchor);
 }

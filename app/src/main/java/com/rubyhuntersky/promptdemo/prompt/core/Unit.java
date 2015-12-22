@@ -10,5 +10,6 @@ public enum Unit {
     TAPPABLE,
     SPACE,
     COMPOUND,
-    ZERO
+    ZERO,
+    ALTSPACE
 }

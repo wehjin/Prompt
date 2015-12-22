@@ -46,10 +46,10 @@ public class Space {
     }
 
     public Space inset(Dimension... insets) {
-        return new Space(this, getDimension(insets, 3, 1, 1).convert(perReadableX, perTappableX, width),
-                         getDimension(insets, 0, 0, 0).convert(perReadableY, perTappableY, height),
-                         getDimension(insets, 1, 1, 1).convert(perReadableX, perTappableX, width),
-                         getDimension(insets, 2, 2, 0).convert(perReadableY, perTappableY, height));
+        return new Space(this, getDimension(insets, 3, 1, 1).convert(perReadableX, perTappableX, width, height),
+                         getDimension(insets, 0, 0, 0).convert(perReadableY, perTappableY, height, width),
+                         getDimension(insets, 1, 1, 1).convert(perReadableX, perTappableX, width, height),
+                         getDimension(insets, 2, 2, 0).convert(perReadableY, perTappableY, height, width));
     }
 
     public Space inset(float... insets) {

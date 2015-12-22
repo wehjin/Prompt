@@ -28,11 +28,12 @@ abstract public class Dimension implements Reducible {
     public static final Dimension CENTER_READABLE = Dimension.HALF_SPACE.offset(Dimension.HALF_READABLE_TEXT.negate());
     public static final Dimension CENTER_LABEL = Dimension.HALF_SPACE.offset(
           Dimension.TAPPABLE.multiply(1 / 5f).negate());
+    public static final Dimension ALTSPACE = create(Unit.ALTSPACE, 1f);
 
     @Override
     abstract public List<Element> toElements(Document document);
 
-    abstract public float convert(float perReadable, float perTappable, float perSpace);
+    abstract public float convert(float perReadable, float perTappable, float perSpace, float perAltspace);
 
     public Dimension negate() {
         return multiply(-1);
@@ -43,8 +44,8 @@ abstract public class Dimension implements Reducible {
         return create(new Implementation() {
 
             @Override
-            public float convert(float perReadable, float perTappable, float perSpace) {
-                return leftDimension.convert(perReadable, perTappable, perSpace) * factor;
+            public float convert(float perReadable, float perTappable, float perSpace, float perAltspace) {
+                return leftDimension.convert(perReadable, perTappable, perSpace, perAltspace) * factor;
             }
 
             @Override
@@ -67,9 +68,9 @@ abstract public class Dimension implements Reducible {
         final Dimension leftDimension = Dimension.this;
         return create(new Implementation() {
             @Override
-            public float convert(float perReadable, float perTappable, float perSpace) {
-                final float divisorFloat = divisor.convert(perReadable, perTappable, perSpace);
-                return leftDimension.convert(perReadable, perTappable, perSpace) / divisorFloat;
+            public float convert(float perReadable, float perTappable, float perSpace, float perAltspace) {
+                final float divisorFloat = divisor.convert(perReadable, perTappable, perSpace, perAltspace);
+                return leftDimension.convert(perReadable, perTappable, perSpace, perAltspace) / divisorFloat;
             }
 
             @Override
@@ -88,9 +89,9 @@ abstract public class Dimension implements Reducible {
         final Dimension leftDimension = Dimension.this;
         return create(new Implementation() {
             @Override
-            public float convert(float perReadable, float perTappable, float perSpace) {
-                return leftDimension.convert(perReadable, perTappable, perSpace)
-                      + offset.convert(perReadable, perTappable, perSpace);
+            public float convert(float perReadable, float perTappable, float perSpace, float perAltspace) {
+                return leftDimension.convert(perReadable, perTappable, perSpace, perAltspace)
+                      + offset.convert(perReadable, perTappable, perSpace, perAltspace);
             }
 
             @Override
@@ -122,7 +123,7 @@ abstract public class Dimension implements Reducible {
             }
 
             @Override
-            public float convert(float perReadable, float perTappable, float perSpace) {
+            public float convert(float perReadable, float perTappable, float perSpace, float perAltspace) {
                 switch (unit) {
                     case ZERO:
                         return 0;
@@ -132,6 +133,8 @@ abstract public class Dimension implements Reducible {
                         return perTappable * amount;
                     case SPACE:
                         return perSpace * amount;
+                    case ALTSPACE:
+                        return perAltspace * amount;
                 }
                 throw new IllegalArgumentException();
             }
@@ -141,8 +144,8 @@ abstract public class Dimension implements Reducible {
     private static Dimension create(final Implementation implementation) {
         return new Dimension() {
             @Override
-            public float convert(float perReadable, float perTappable, float perSpace) {
-                return implementation.convert(perReadable, perTappable, perSpace);
+            public float convert(float perReadable, float perTappable, float perSpace, float perAltspace) {
+                return implementation.convert(perReadable, perTappable, perSpace, perAltspace);
             }
 
             @Override
@@ -153,7 +156,7 @@ abstract public class Dimension implements Reducible {
     }
 
     private interface Implementation {
-        float convert(float perReadable, float perTappable, float perSpace);
+        float convert(float perReadable, float perTappable, float perSpace, float perAltspace);
         List<Element> toElements(Document document);
     }
 }
