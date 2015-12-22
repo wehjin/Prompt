@@ -1,5 +1,6 @@
 package com.rubyhuntersky.promptdemo.prompt.basic;
 
+import com.rubyhuntersky.promptdemo.prompt.basic.onpresent.BeforeOnPresent;
 import com.rubyhuntersky.promptdemo.prompt.basic.onpresent.CarveBottomOnPresent;
 import com.rubyhuntersky.promptdemo.prompt.basic.onpresent.InsetOnPresent;
 import com.rubyhuntersky.promptdemo.prompt.basic.onpresent.LimitHeightOnPresent;
@@ -54,6 +55,11 @@ public class BasePrompt<P, O> implements Prompt<P, O> {
     @Override
     public Prompt<P, O> limitHeight(final Dimension size, final Anchor anchor) {
         return new BasePrompt<>(new LimitHeightOnPresent<>(size, anchor, this));
+    }
+
+    @Override
+    public Prompt<P, O> before(Prompt<Void, Void> background) {
+        return new BasePrompt<>(new BeforeOnPresent<>(background, this));
     }
 
     @Override

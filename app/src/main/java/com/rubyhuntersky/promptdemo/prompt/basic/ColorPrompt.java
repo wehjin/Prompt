@@ -22,6 +22,7 @@ import java.util.List;
 public class ColorPrompt extends BasePrompt<Void, Void> {
     public static final ColorPrompt PRIMARY = new ColorPrompt(ColorWell.PRIMARY);
     public static final ColorPrompt ACCENT = new ColorPrompt(ColorWell.ACCENT);
+    public static final ColorPrompt PRIMARY_LIGHT = new ColorPrompt(ColorWell.PRIMARY_LIGHT);
 
     private final ColorWell colorWell;
 

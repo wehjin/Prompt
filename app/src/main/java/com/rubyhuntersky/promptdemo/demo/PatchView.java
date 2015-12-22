@@ -110,7 +110,9 @@ public class PatchView extends FrameLayout {
         int width = (int) region.width;
         int height = (int) region.height;
         if (shape instanceof TextlineShape) {
-            height *= 1.5;
+            int padding = height / 2;
+            top -= padding;
+            height += 2 * padding;
         }
         final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
         params.leftMargin = left;

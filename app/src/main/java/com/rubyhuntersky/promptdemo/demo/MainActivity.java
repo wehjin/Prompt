@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.rubyhuntersky.promptdemo.prompt.basic.ColorPrompt;
+import com.rubyhuntersky.promptdemo.prompt.basic.TextlinePrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
@@ -39,10 +40,11 @@ public class MainActivity extends AudienceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.prompt = new ColorPrompt(ColorWell.PRIMARY_LIGHT).limitHeight(Dimension.ALTSPACE, Anchor.CENTER)
-                                                              .inset(Dimension.TAPPABLE);
-
+        final TextlinePrompt amount = new TextlinePrompt(ColorWell.BLACK, "$3.00", Anchor.CENTER);
+        this.prompt = amount.inset(Dimension.CENTER_READABLE, Dimension.READABLE)
+                            .before(ColorPrompt.PRIMARY_LIGHT)
+                            .limitHeight(Dimension.ALTSPACE, Anchor.CENTER)
+                            .inset(Dimension.TAPPABLE);
         try {
             final Document document = getDocument();
             Log.d(MainActivity.class.getSimpleName(), "Prompt: " + getStringFromDocument(document));

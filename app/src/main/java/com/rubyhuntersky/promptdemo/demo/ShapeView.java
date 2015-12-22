@@ -47,6 +47,7 @@ public class ShapeView extends View {
             setBackgroundColor(color);
         } else {
             paint.setColor(color);
+            paint.setSubpixelText(true);
             invalidate();
         }
     }
@@ -57,14 +58,15 @@ public class ShapeView extends View {
         if (shape instanceof TextlineShape) {
             TextlineShape textLine = (TextlineShape) shape;
             final String text = textLine.text;
-            final float textExtra = getHeight() / 3;
-            final float textHeight = 2 * textExtra;
+            final float textExtra = getHeight() / 2;
+            final float textHeight = getHeight() - textExtra;
+            final float textTop = textExtra / 2;
 
             paint.setTextSize(textHeight * 1.41f);
             final float textWidth = paint.measureText(text);
             final float extraWidth = getWidth() - textWidth;
             final float x = extraWidth * ((TextlineShape) shape).anchor.x;
-            final float y = textHeight;
+            final float y = textTop + textHeight;
             path.reset();
             paint.getTextPath(text, 0, text.length(), x, y, path);
             path.close();
