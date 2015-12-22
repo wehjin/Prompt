@@ -4,6 +4,7 @@ import com.rubyhuntersky.promptdemo.prompt.core.Audience;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
 import com.rubyhuntersky.promptdemo.prompt.core.Observer;
+import com.rubyhuntersky.promptdemo.prompt.core.OutcomeAdapter;
 import com.rubyhuntersky.promptdemo.prompt.core.Patch;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Prompt;
@@ -24,11 +25,11 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
+public class BasePrompt<P, O> implements Prompt<P, O> {
 
-    private final OnPresent<ProgressT> onPresent;
+    private final OnPresent<P, O> onPresent;
 
-    public BasePrompt(OnPresent<ProgressT> onPresent) {
+    public BasePrompt(OnPresent<P, O> onPresent) {
         this.onPresent = onPresent;
     }
 
@@ -37,21 +38,20 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
     }
 
     @Override
-    public Prompt<ProgressT> inset(final Dimension... insets) {
+    public Prompt<P, O> inset(final Dimension... insets) {
         return new BasePrompt<>(new InsetOnPresent<>(this, insets));
     }
 
     @Override
-    public <ProgressT2, AdaptedT> Prompt<AdaptedT> carveBottom(final Dimension size, final Prompt<ProgressT2> prompt,
-          Adapter2<ProgressT, ProgressT2, AdaptedT> adapter) {
-        final BasePrompt<ProgressT> original = this;
-        return new BasePrompt<>(new OnPresent<AdaptedT>() {
+    public <P2, O2, P3, O3> Prompt<P3, O3> carveBottom(final Dimension size, final Prompt<P2, O2> prompt,
+          final OutcomeAdapter<O, O2, O3> adapter) {
+        final BasePrompt<P, O> original = this;
+        return new BasePrompt<>(new OnPresent<P3, O3>() {
             @Override
-            public void present(final Presenter<AdaptedT> presenter) {
+            public void present(final Presenter<P3, O3> presenter) {
                 final Space originalSpace = presenter.getSpace();
                 final float minorHeight = Math.round(
-                      size.convert(originalSpace.perReadableY, originalSpace.perTappableY,
-                                   originalSpace.height));
+                      size.convert(originalSpace.perReadableY, originalSpace.perTappableY, originalSpace.height));
                 final Space majorSpace = originalSpace.inset(0f, 0f, minorHeight);
                 final Space minorSpace = originalSpace.inset(majorSpace.height, 0f, 0f);
                 presenter.addPresentation(original.present(new Audience() {
@@ -64,7 +64,11 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
                     public Patch getPatch(ColorWell colorWell, Region region, Shape shape) {
                         return presenter.getPatch(colorWell, region, shape);
                     }
-                }, new Observer<ProgressT>() {
+                }, new Observer<O>() {
+                    @Override
+                    public void onOutcome(O outcome) {
+                        presenter.onOutcome(adapter.adaptFirst(outcome));
+                    }
                 }));
                 presenter.addPresentation(prompt.present(new Audience() {
                     @Override
@@ -76,7 +80,11 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
                     public Patch getPatch(ColorWell colorWell, Region region, Shape shape) {
                         return presenter.getPatch(colorWell, region, shape);
                     }
-                }, new Observer<ProgressT2>() {
+                }, new Observer<O2>() {
+                    @Override
+                    public void onOutcome(O2 outcome) {
+                        presenter.onOutcome(adapter.adaptSecond(outcome));
+                    }
                 }));
             }
 
@@ -98,9 +106,9 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
     }
 
     @Override
-    public Presentation<ProgressT> present(final Audience audience, Observer<ProgressT> observer) {
+    public Presentation<P> present(final Audience audience, final Observer<O> observer) {
 
-        final Presenter<ProgressT> presenter = new Presenter<ProgressT>() {
+        final Presenter<P, O> presenter = new Presenter<P, O>() {
 
             boolean isEnded = false;
             List<Presentation<?>> presentations = new ArrayList<>();
@@ -108,6 +116,11 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
             @Override
             public void addPresentation(Presentation<?> presentation) {
                 presentations.add(presentation);
+            }
+
+            @Override
+            public void onOutcome(O outcome) {
+                observer.onOutcome(outcome);
             }
 
             @Override
@@ -134,7 +147,7 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
             }
 
             @Override
-            public ProgressT getProgress() {
+            public P getProgress() {
                 return null;
             }
         };
@@ -149,26 +162,26 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
         return onPresent == null ? Collections.<Element>emptyList() : onPresent.toElements(document);
     }
 
-    public interface OnPresent<ProgressT> {
-        void present(Presenter<ProgressT> presenter);
+    public interface OnPresent<P, O> {
+        void present(Presenter<P, O> presenter);
         List<Element> toElements(Document document);
     }
 
-    public interface Presenter<ProgressT> extends Audience, Observer<ProgressT>, Presentation<ProgressT> {
+    public interface Presenter<P, O> extends Audience, Observer<O>, Presentation<P> {
         void addPresentation(Presentation<?> presentation);
     }
 
-    private static class InsetOnPresent<ProgressT> implements OnPresent<ProgressT> {
-        private final BasePrompt<ProgressT> previousPrompt;
+    private static class InsetOnPresent<P, O> implements OnPresent<P, O> {
+        private final BasePrompt<P, O> previousPrompt;
         private final Dimension[] insets;
 
-        public InsetOnPresent(BasePrompt<ProgressT> previousPrompt, Dimension... insets) {
+        public InsetOnPresent(BasePrompt<P, O> previousPrompt, Dimension... insets) {
             this.previousPrompt = previousPrompt;
             this.insets = insets;
         }
 
         @Override
-        public void present(final Presenter<ProgressT> presenter) {
+        public void present(final Presenter<P, O> presenter) {
             presenter.addPresentation(previousPrompt.present(new Audience() {
                 @Override
                 public Space getSpace() {

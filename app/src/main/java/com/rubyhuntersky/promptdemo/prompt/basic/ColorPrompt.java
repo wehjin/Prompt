@@ -19,7 +19,7 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class ColorPrompt extends BasePrompt<Void> {
+public class ColorPrompt extends BasePrompt<Void, Void> {
     public static final ColorPrompt PRIMARY = new ColorPrompt(ColorWell.PRIMARY);
     public static final ColorPrompt ACCENT = new ColorPrompt(ColorWell.ACCENT);
 

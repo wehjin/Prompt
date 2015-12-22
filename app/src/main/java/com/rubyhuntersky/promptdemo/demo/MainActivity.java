@@ -9,6 +9,7 @@ import com.rubyhuntersky.promptdemo.prompt.basic.TextlinePrompt;
 import com.rubyhuntersky.promptdemo.prompt.core.Anchor;
 import com.rubyhuntersky.promptdemo.prompt.core.ColorWell;
 import com.rubyhuntersky.promptdemo.prompt.core.Dimension;
+import com.rubyhuntersky.promptdemo.prompt.core.OutcomeAdapter;
 import com.rubyhuntersky.promptdemo.prompt.core.Palette;
 import com.rubyhuntersky.promptdemo.prompt.core.Presentation;
 import com.rubyhuntersky.promptdemo.prompt.core.Prompt;
@@ -28,7 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public class MainActivity extends AudienceActivity {
 
-    private Prompt<?> prompt;
+    private Prompt<?, ?> prompt;
     private Presentation<?> presentation;
     private final Palette palette = new MainPalette();
 
@@ -44,11 +45,11 @@ public class MainActivity extends AudienceActivity {
 
         final Dimension vInset = Dimension.CENTER_LABEL;
         final Dimension hInset = Dimension.READABLE;
-        final Prompt<Void> centeredReadable = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER)
+        final Prompt<Void, Void> centeredReadable = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER)
               .inset(vInset, hInset);
         this.prompt = centeredReadable
-              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, Prompt.Adapter2.VOID)
-              .carveBottom(Dimension.READABLE, ColorPrompt.ACCENT, Prompt.Adapter2.VOID)
+              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, OutcomeAdapter.VOID)
+              .carveBottom(Dimension.READABLE, ColorPrompt.ACCENT, OutcomeAdapter.VOID)
         ;
 
         try {

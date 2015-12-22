@@ -19,7 +19,7 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public class TextlinePrompt extends BasePrompt<Void> {
+public class TextlinePrompt extends BasePrompt<Void, Void> {
 
     private final ColorWell colorWell;
     private final TextlineShape textlineShape;

@@ -10,16 +10,14 @@ import java.util.List;
  * @since 12/12/15.
  */
 
-public interface Prompt<ProgressT> extends Reducible {
-    Presentation<ProgressT> present(Audience audience, Observer<ProgressT> observer);
+public interface Prompt<P, O> extends Reducible {
+    Presentation<P> present(Audience audience, Observer<O> observer);
     List<Element> toElements(Document document);
 
-    Prompt<ProgressT> inset(Dimension... insets);
-    <ProgressT2, AdaptedT> Prompt<AdaptedT> carveBottom(Dimension size, Prompt<ProgressT2> prompt,
-          Adapter2<ProgressT, ProgressT2, AdaptedT> adapter);
+    Prompt<P, O> inset(Dimension... insets);
 
-    interface Adapter2<InputT1, InputT2, OutputT> {
-        Adapter2<Void, Void, Void> VOID = new Adapter2<Void, Void, Void>() {
-        };
-    }
+    <P2, O2, P3, O3> Prompt<P3, O3> carveBottom(Dimension size,
+          Prompt<P2, O2> prompt,
+          OutcomeAdapter<O, O2, O3> adapter);
+
 }

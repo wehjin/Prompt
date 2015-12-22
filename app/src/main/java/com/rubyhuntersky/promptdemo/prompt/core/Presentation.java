@@ -5,8 +5,8 @@ package com.rubyhuntersky.promptdemo.prompt.core;
  * @since 12/12/15.
  */
 
-public interface Presentation<ProgressT> {
+public interface Presentation<T> {
     void end();
     boolean isEnded();
-    ProgressT getProgress();
+    T getProgress();
 }

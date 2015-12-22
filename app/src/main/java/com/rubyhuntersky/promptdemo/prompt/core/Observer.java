@@ -6,4 +6,5 @@ package com.rubyhuntersky.promptdemo.prompt.core;
  */
 
 public interface Observer<T> {
+    void onOutcome(T outcome);
 }
