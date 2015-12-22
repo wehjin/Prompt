@@ -49,7 +49,10 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
             @Override
             public void present(final Presenter<AdaptedT> presenter) {
                 final Space originalSpace = presenter.getSpace();
-                final Space majorSpace = originalSpace.inset(Dimension.ZERO, Dimension.ZERO, size);
+                final float minorHeight = Math.round(
+                      size.convert(originalSpace.perReadableY, originalSpace.perTappableY,
+                                   originalSpace.height));
+                final Space majorSpace = originalSpace.inset(0f, 0f, minorHeight);
                 final Space minorSpace = originalSpace.inset(majorSpace.height, 0f, 0f);
                 presenter.addPresentation(original.present(new Audience() {
                     @Override
@@ -166,7 +169,7 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
 
         @Override
         public void present(final Presenter<ProgressT> presenter) {
-            previousPrompt.present(new Audience() {
+            presenter.addPresentation(previousPrompt.present(new Audience() {
                 @Override
                 public Space getSpace() {
                     return presenter.getSpace().inset(insets);
@@ -176,7 +179,7 @@ public class BasePrompt<ProgressT> implements Prompt<ProgressT> {
                 public Patch getPatch(ColorWell color, Region region, Shape shape) {
                     return presenter.getPatch(color, region, shape);
                 }
-            }, presenter);
+            }, presenter));
         }
 
         @Override

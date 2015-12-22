@@ -47,8 +47,9 @@ public class MainActivity extends AudienceActivity {
         final Prompt<Void> centeredReadable = new TextlinePrompt(ColorWell.CONTENT_DARK, "Ahoy", Anchor.CENTER)
               .inset(vInset, hInset);
         this.prompt = centeredReadable
+              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, Prompt.Adapter2.VOID)
               .carveBottom(Dimension.READABLE, ColorPrompt.ACCENT, Prompt.Adapter2.VOID)
-              .carveBottom(Dimension.TAPPABLE, ColorPrompt.PRIMARY, Prompt.Adapter2.VOID);
+        ;
 
         try {
             final Document document = getDocument();
